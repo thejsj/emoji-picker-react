@@ -1,4 +1,5 @@
 import { scrollTo } from '../DomUtils/scrollTo';
+import { useEffect } from 'react';
 import {
   usePickerMainRef,
   useSearchInputRef
@@ -57,7 +58,7 @@ export function useAppendSearch() {
   };
 }
 
-export function useFilter() {
+export function useFilter(externalFilterString?: string) {
   const SearchInputRef = useSearchInputRef();
   const filterRef = useFilterRef();
   const setFilterRef = useSetFilterRef();
@@ -68,6 +69,13 @@ export function useFilter() {
     filterRef.current,
     searchTerm
   );
+
+  // Apply external filterString when provided
+  useEffect(() => {
+    if (externalFilterString !== undefined) {
+      onChange(externalFilterString);
+    }
+  }, [externalFilterString]);
 
   return {
     onChange,

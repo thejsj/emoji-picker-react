@@ -17,7 +17,6 @@ export function PickerContextProvider({ children }: Props) {
   const disallowedEmojis = useDisallowedEmojis();
   const defaultSkinTone = useDefaultSkinToneConfig();
   const reactionsDefaultOpen = useReactionsOpenConfig();
-
   // Initialize the filter with the inititial dictionary
   const filterRef = React.useRef<FilterState>(alphaNumericEmojiIndex);
   const disallowClickRef = React.useRef<boolean>(false);

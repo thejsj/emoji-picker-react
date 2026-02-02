@@ -19,33 +19,42 @@ import { BtnClearSearch } from './BtnClearSearch';
 import { IcnSearch } from './IcnSearch';
 import SVGTimes from './svg/times.svg';
 
-export function SearchContainer() {
+export function SearchContainer({ filterString }: { filterString?: string }) {
   const searchDisabled = useSearchDisabledConfig();
 
   const isSkinToneInSearch = useIsSkinToneInSearch();
 
+  // If search is disabled, don't render anything
   if (searchDisabled) {
     return null;
   }
 
+  // If skin tone picker is in search and filterString is provided, render the search component with the filterString
+  // which won't actually display anything, but will be used to filter the emojis
+  if (isSkinToneInSearch && typeof filterString === 'string') {
+    return <Search filterString={filterString} />
+  }
+
   return (
     <Flex className={cx(styles.overlay)}>
-      <Search />
+      <Search filterString={filterString} />
 
       {isSkinToneInSearch ? <SkinTonePicker /> : null}
     </Flex>
   );
 }
 
-export function Search() {
+export function Search({ filterString }: { filterString?: string }) {
   const closeAllOpenToggles = useCloseAllOpenToggles();
   const SearchInputRef = useSearchInputRef();
   const placeholder = useSearchPlaceHolderConfig();
   const autoFocus = useAutoFocusSearchConfig();
-  const { statusSearchResults, searchTerm, onChange } = useFilter();
+  const { statusSearchResults, searchTerm, onChange } = useFilter(filterString);
 
   const input = SearchInputRef?.current;
   const value = input?.value;
+  // Hide search input when filterString is provided (external control mode)
+  const isHidden = filterString !== undefined;
 
   return (
     <Relative className={cx(styles.searchContainer)}>
@@ -54,7 +63,7 @@ export function Search() {
         autoFocus={autoFocus}
         aria-label={'Type to search for an emoji'}
         onFocus={closeAllOpenToggles}
-        className={cx(styles.search)}
+        className={cx(styles.search, isHidden && styles.hidden)}
         type="text"
         aria-controls="epr-search-id"
         placeholder={placeholder}
@@ -74,8 +83,8 @@ export function Search() {
           {statusSearchResults}
         </div>
       ) : null}
-      <IcnSearch />
-      <BtnClearSearch />
+      {!isHidden && <IcnSearch />}
+      {!isHidden && <BtnClearSearch />}
     </Relative>
   );
 }
@@ -90,6 +99,9 @@ const styles = stylesheet.create({
     flex: '1',
     display: 'block',
     minWidth: '0'
+  },
+  hidden: {
+    display: 'none'
   },
   visuallyHidden: {
     clip: 'rect(0 0 0 0)',

@@ -3,6 +3,7 @@ import * as React from 'react';
 import EmojiPickerReact from './EmojiPickerReact';
 import ErrorBoundary from './components/ErrorBoundary';
 import { PickerConfig } from './config/config';
+export { EmojiProperties, type DataEmoji } from './dataUtils/DataTypes';
 import {
   MutableConfigContext,
   useDefineMutableConfig
@@ -22,7 +23,9 @@ export {
 
 export { emojiByUnified } from './dataUtils/emojiSelectors';
 
-export interface PickerProps extends PickerConfig {}
+export interface PickerProps extends PickerConfig {
+  filterString?: string;
+}
 
 export default function EmojiPicker(props: PickerProps) {
   const MutableConfigRef = useDefineMutableConfig({
