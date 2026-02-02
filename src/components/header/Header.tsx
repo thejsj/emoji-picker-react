@@ -7,12 +7,12 @@ import { CategoryNavigation } from '../navigation/CategoryNavigation';
 
 import { SearchContainer } from './Search/Search';
 
-export function Header({ filterString }: { filterString?: string }) {
+export function Header({ filterString, onEmojiListSearch }: { filterString?: string; onEmojiListSearch?: (emojis: any[] | null) => void }) {
   return (
     <Relative
       className={cx('epr-header', commonInteractionStyles.hiddenOnReactions)}
     >
-      <SearchContainer filterString={filterString} />
+      <SearchContainer filterString={filterString} onEmojiListSearch={onEmojiListSearch} />
       <CategoryNavigation />
     </Relative>
   );

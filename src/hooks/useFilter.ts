@@ -58,7 +58,7 @@ export function useAppendSearch() {
   };
 }
 
-export function useFilter(externalFilterString?: string) {
+export function useFilter(externalFilterString?: string, onEmojiListSearch?: (emojis: DataEmoji[] | null) => void) {
   const SearchInputRef = useSearchInputRef();
   const filterRef = useFilterRef();
   const setFilterRef = useSetFilterRef();
@@ -76,6 +76,23 @@ export function useFilter(externalFilterString?: string) {
       onChange(externalFilterString);
     }
   }, [externalFilterString]);
+
+  // Call onEmojiListSearch when search term changes
+  useEffect(() => {
+    if (onEmojiListSearch) {
+      if (!searchTerm) {
+        onEmojiListSearch(null);
+      } else {
+        const filteredEmojis = filterRef.current?.[searchTerm];
+        if (filteredEmojis) {
+          const emojiList = Object.values(filteredEmojis);
+          onEmojiListSearch(emojiList);
+        } else {
+          onEmojiListSearch(null);
+        }
+      }
+    }
+  }, [searchTerm, onEmojiListSearch]);
 
   return {
     onChange,

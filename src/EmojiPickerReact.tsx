@@ -16,22 +16,23 @@ import { PickerProps } from './index';
 
 interface EmojiPickerReactProps extends PickerProps {
   filterString?: string;
+  onEmojiListSearch?: (emojis: any[] | null) => void;
 }
 
 function EmojiPicker(props: EmojiPickerReactProps) {
-  const { filterString, ...configProps } = props;
+  const { filterString, onEmojiListSearch, ...configProps } = props;
 
   return (
     <ElementRefContextProvider>
       <PickerStyleTag />
       <PickerConfigProvider {...configProps}>
-        <ContentControl filterString={filterString} />
+        <ContentControl filterString={filterString} onEmojiListSearch={onEmojiListSearch} />
       </PickerConfigProvider>
     </ElementRefContextProvider>
   );
 }
 
-function ContentControl({ filterString }: { filterString?: string }) {
+function ContentControl({ filterString, onEmojiListSearch }: { filterString?: string; onEmojiListSearch?: (emojis: any[] | null) => void }) {
   const [reactionsDefaultOpen] = useReactionsModeState();
   const allowExpandReactions = useAllowExpandReactions();
 
@@ -55,19 +56,19 @@ function ContentControl({ filterString }: { filterString?: string }) {
   return (
     <PickerMain>
       <Reactions />
-      <ExpandedPickerContent renderAll={renderAll} filterString={filterString} />
+      <ExpandedPickerContent renderAll={renderAll} filterString={filterString} onEmojiListSearch={onEmojiListSearch} />
     </PickerMain>
   );
 }
 
-function ExpandedPickerContent({ renderAll, filterString }: { renderAll: boolean; filterString?: string }) {
+function ExpandedPickerContent({ renderAll, filterString, onEmojiListSearch }: { renderAll: boolean; filterString?: string; onEmojiListSearch?: (emojis: any[] | null) => void }) {
   if (!renderAll) {
     return null;
   }
 
   return (
     <>
-      <Header filterString={filterString} />
+      <Header filterString={filterString} onEmojiListSearch={onEmojiListSearch} />
       <Body />
       <Preview />
     </>

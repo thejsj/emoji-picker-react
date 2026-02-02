@@ -19,7 +19,7 @@ import { BtnClearSearch } from './BtnClearSearch';
 import { IcnSearch } from './IcnSearch';
 import SVGTimes from './svg/times.svg';
 
-export function SearchContainer({ filterString }: { filterString?: string }) {
+export function SearchContainer({ filterString, onEmojiListSearch }: { filterString?: string; onEmojiListSearch?: (emojis: any[] | null) => void }) {
   const searchDisabled = useSearchDisabledConfig();
 
   const isSkinToneInSearch = useIsSkinToneInSearch();
@@ -32,24 +32,24 @@ export function SearchContainer({ filterString }: { filterString?: string }) {
   // If skin tone picker is in search and filterString is provided, render the search component with the filterString
   // which won't actually display anything, but will be used to filter the emojis
   if (isSkinToneInSearch && typeof filterString === 'string') {
-    return <Search filterString={filterString} />
+    return <Search filterString={filterString} onEmojiListSearch={onEmojiListSearch} />
   }
 
   return (
     <Flex className={cx(styles.overlay)}>
-      <Search filterString={filterString} />
+      <Search filterString={filterString} onEmojiListSearch={onEmojiListSearch} />
 
       {isSkinToneInSearch ? <SkinTonePicker /> : null}
     </Flex>
   );
 }
 
-export function Search({ filterString }: { filterString?: string }) {
+export function Search({ filterString, onEmojiListSearch }: { filterString?: string; onEmojiListSearch?: (emojis: any[] | null) => void }) {
   const closeAllOpenToggles = useCloseAllOpenToggles();
   const SearchInputRef = useSearchInputRef();
   const placeholder = useSearchPlaceHolderConfig();
   const autoFocus = useAutoFocusSearchConfig();
-  const { statusSearchResults, searchTerm, onChange } = useFilter(filterString);
+  const { statusSearchResults, searchTerm, onChange } = useFilter(filterString, onEmojiListSearch);
 
   const input = SearchInputRef?.current;
   const value = input?.value;

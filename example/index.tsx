@@ -19,6 +19,7 @@ const App = () => {
       {/* When filterString is provided, hide the internal search and use external control */}
       <EmojiPicker
         filterString={filterString}
+        onEmojiListSearch={(searchString) => console.log(searchString)}
         skinTonesDisabled={true}
         onEmojiClick={(e) => setEmojis(emojis + e.emoji)}
       />
